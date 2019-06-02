@@ -1,0 +1,159 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="UTF-8">
+	<!-- Modify Title between these comments (Choose correct class number and substitute your username) -->
+	<title>ITMD 565 Lab 3 - jsotafernandezmartos - DOM Manipulation</title>
+	<!-- Modify Title between these comments -->
+	<style type="text/css">
+	body {
+		background-color: #ccc;
+		font-family: sans-serif;
+	}
+	label {
+		width: 100px;
+		display: inline-block;
+		margin: 5px 0;
+	}
+	input {
+		display: inline-block;
+		margin: 5px 0;
+	}
+	button {
+		display: inline-block;
+		margin: 20px 10px 20px 0;
+	}
+	li {
+		list-style-type: none;
+		margin: 5%;
+		padding: 2%;
+	}
+	#wrapper {
+		background-color: #fff;
+		max-width: 800px;
+		margin: 0 auto;
+		padding: 20px 40px;
+	}
+	#resultsWrapper .result {
+		border: 4px solid red;
+		padding: 10px;
+		margin: 10px 0;
+	}
+	#resultsWrapper .red {
+		border-color: red;
+	}
+	#resultsWrapper .red h2 {
+		color: red;
+	}
+	#resultsWrapper .green {
+		border-color: green;
+	}
+	#resultsWrapper .green h2 {
+		color: green;
+	}
+	#resultsWrapper .blue {
+		border-color: blue;
+	}
+	#resultsWrapper .blue h2 {
+		color: blue;
+	}
+	/* You may add additional CSS below this comment if you feel necessary */
+
+	</style>
+</head>
+<body>
+	<div id="wrapper">
+		<!-- Modify headlines between these comments (Choose correct class number and substitute Name and Email) -->
+		<h1>ITMD 565 - Lab 3 - DOM Manipulation</h1>
+		<h2>Jose Ignacio Sota Fernandez-Martos - jsotafernandezmartos@hawk.iit.edu</h2>
+		<!-- Modify headlines between these comments -->
+		<label for="bodyInput">Body Text: </label><input id="bodyInput" type="text"><br>
+		<label for="qtyInput">Quantity: </label><input id="qtyInput" type="text"><br>
+		<label for="colorInput">Color: </label>
+		<select id="colorInput">
+			<option value="red">Red</option>
+			<option value="green">Green</option>
+			<option value="blue">Blue</option>
+		</select><br>
+
+		<button id="runBtn">Run Lab</button>
+		<button id="resetBtn">Reset Lab</button>
+
+		<h2>Results</h2>
+		<div id="resultsWrapper"></div>
+	</div>
+
+	<script type="text/javascript">
+	// Begin JavaScript Code Here - Do not put JavaScript outside these comments.
+	//Variables
+	//Functions
+	function reset(){
+		document.getElementById('bodyInput').value = "";
+		document.getElementById('qtyInput').value = "";
+		document.getElementById('colorInput').selectedIndex = "0";
+		document.getElementById('resultsWrapper').innerHTML = "";
+		document.getElementById('resetBtn').disabled = true;
+	}
+	function handleClick(){
+		//Cleaning the resultsWrapper field
+		document.getElementById('resultsWrapper').innerHTML = "";
+		//Acquiring the values of the different inputs
+		let bodyText = document.getElementById('bodyInput').value.trim();
+		let quantity = document.getElementById('qtyInput').value.trim();
+		let color =  document.getElementById('colorInput').value;
+		//Test if all the inputs are OK
+		if(bodyText === ""){
+			alert("Please make sure all the inputs are correct.".trim());
+			return;
+		}
+		else if(isNaN(Number(quantity)) || quantity===""){
+			alert("Data introduced is not a number".trim());
+			return;
+		}
+		else if(Number(quantity) <= 0){
+			alert("Please introduce a interget greater than 0.".trim());
+			return;
+		}
+		else{
+			//Create the elements in the resultsWrapper
+			let results = document.createElement('ol');
+			results.id = 'results';
+
+			for (var i = 1; i <= quantity; i++) {
+				//Creation of one item of a list
+				let item = document.createElement('li');
+				item.style.border = 'solid '+color;
+				item.id = 'item'+i;
+				//Creation of the header of the item
+				let headerItem = document.createElement('h2');
+				headerItem.id = 'headerItem'+i;
+				headerItem.style.color = color;
+				headerItem.appendChild(document.createTextNode('Item '+i));
+				//Creation of the body of the item
+				let bodyItem = document.createElement('p');
+				bodyItem.id = 'bodyItem'+i;
+				bodyItem.appendChild(document.createTextNode(bodyText));
+				//Creation of the deleteBtn
+				let deleteBtn = document.createElement('button');
+				deleteBtn.id = 'deleteBtn'+i;
+				deleteBtn.appendChild(document.createTextNode('Delete'));
+				deleteBtn.addEventListener('click',function(){
+					this.parentNode.parentNode.removeChild(this.parentNode);
+				},false)
+				//Append elements created
+				item.appendChild(headerItem);
+				item.appendChild(bodyItem);
+				item.appendChild(deleteBtn);
+				results.appendChild(item);
+			}//END for loop
+			document.getElementById('resultsWrapper').appendChild(results);
+			document.getElementById('resetBtn').disabled = false;
+		}//END else
+	}//END function handleClick
+	document.getElementById('runBtn').addEventListener('click',handleClick,false);
+	document.getElementById('resetBtn').addEventListener('click',reset,false);
+	document.getElementById('resetBtn').disabled = true;
+	// End JavaScript Code Here - Do not put JavaScript outside these comments.
+	</script>
+</body>
+</html>

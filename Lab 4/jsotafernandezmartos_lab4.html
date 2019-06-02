@@ -1,0 +1,122 @@
+<!DOCTYPE html>
+<html lang="en" dir="ltr">
+<head>
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta charset="utf-8">
+  <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.0/css/bootstrap.min.css">
+  <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
+  <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.0/js/bootstrap.min.js"></script>
+  <title></title>
+</head>
+<body>
+  <div class="container-fluid">
+    <h1 class="text-center"><abbr title="Information Technology and Management Development">ITMD</abbr>-565 - LAB 4</h1>
+    <h1 class="text-center"><small><code>Jose Ignacio Sota Fernandez-Martos</code> - <code>jsotafernandezmartos@hawk.iit.edu</code></small></h1>
+    <div id="wrapper" class='btn-group-lg text-center'>
+      <button id="runBtn" type="button" class="btn">Load Data</button>
+      <button id="resetBtn" type="button" class="btn btn-danger">Reset</button>
+    </div>
+    <div id="resultsWrapper" class="table-responsive text-center" style="margin:3%">
+    </div>
+  </div>
+
+  <script type="text/javascript">
+    function createTableHeader(){
+      //Cleaning the resultsWrapper field
+      document.getElementById('resultsWrapper').innerHTML = "";
+      let table = document.createElement('table');
+      table.id = "tableResults";
+      table.setAttribute('class', 'table table-bordered');
+      table.align = "center";
+      let headerTable = document.createElement('thead');
+      headerTable.id = 'headerTable';
+      let row1 = document.createElement('tr');
+      row1.id = 'row1';
+      row1.setAttribute('class', 'active');
+      const header= ["Id","First Name", "Last Name","Title","Email","Gender","Active"];
+      let col = [];
+      for(var i=0;i<header.length;i++){
+        col [i] = document.createElement('th');
+        col[i].appendChild(document.createTextNode(header[i]));
+        row1.appendChild(col[i]);
+      }
+      headerTable.appendChild(row1);
+      table.appendChild(headerTable);
+      document.getElementById('resultsWrapper').appendChild(table);
+    }
+
+    document.getElementById("resetBtn").addEventListener("click", function (){
+      document.getElementById('resultsWrapper').innerHTML = "";
+      createTableHeader();
+      document.getElementById('resetBtn').disabled = true;
+      document.getElementById('runBtn').disabled = false;
+    });
+    document.getElementById('runBtn').addEventListener('click',function (){
+      fetch('http://libertyville.rice.iit.edu/scripts/4565_lab4.php')
+      .then(function(response){
+        return response.json();
+      })
+      .then(function(myJson){
+        document.getElementById('resultsWrapper').innerHTML = "";
+        createTableHeader();
+        let bodyTable = document.createElement('tbody');
+        bodyTable.id = 'bodyTable';
+        for (var i = 0; i < myJson.length; i++) {
+          let row = document.createElement('tr');
+          //Id
+          let cellId = document.createElement('td');
+          let idText = document.createTextNode(myJson[i].id);
+          cellId.appendChild(idText);
+          row.appendChild(cellId);
+          //first_name
+          let cellFName = document.createElement('td');
+          let fNameText = document.createTextNode(myJson[i].first_name);
+          cellFName.appendChild(fNameText);
+          row.appendChild(cellFName);
+          //last_name
+          let cellLName = document.createElement('td');
+          let lNameText = document.createTextNode(myJson[i].last_name);
+          cellLName.appendChild(lNameText);
+          row.appendChild(cellLName);
+          //email
+          let cellEmail = document.createElement('td');
+          let emailText = document.createTextNode(myJson[i].email);
+          cellEmail.appendChild(emailText);
+          row.appendChild(cellEmail);
+          //gender
+          let cellGender = document.createElement('td');
+          let genderText = document.createTextNode(myJson[i].gender);
+          cellGender.appendChild(genderText);
+          row.appendChild(cellGender);
+          //title
+          let cellTitle =  document.createElement('td');
+          let titleText = document.createTextNode(myJson[i].title);
+          cellTitle.appendChild(titleText);
+          row.appendChild(cellTitle);
+          //active
+          let cellActive = document.createElement('td');
+          let activeText  = document.createTextNode(myJson[i].active);
+          if(myJson[i].active === true){
+            row.setAttribute('class', 'success');
+          }else{
+            row.setAttribute('class', 'danger');
+          }
+          cellActive.appendChild(activeText);
+          row.appendChild(cellActive);
+          //Append row to table
+          bodyTable.appendChild(row);
+        }
+        document.getElementById('tableResults').appendChild(bodyTable);
+        document.getElementById('resetBtn').disabled = false;
+        document.getElementById('runBtn').disabled  = true;
+      });//end then
+
+    });//END function handleClick
+    document.getElementById('resultsWrapper').innerHTML = "";
+    createTableHeader();
+    document.getElementById('resetBtn').disabled = true;
+    document.getElementById('runBtn').disabled  = false;
+
+  </script>
+</body>
+</html>

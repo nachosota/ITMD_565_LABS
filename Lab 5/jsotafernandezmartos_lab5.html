@@ -1,0 +1,149 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="UTF-8">
+	<title>ITMD-565 Lab 4 - Canvas Drawing</title>
+	<style type="text/css">
+		#content-wrapper {
+			width: 600px;
+			margin: 0 auto;
+			text-align: center;
+		}
+		#canvasRun {
+			background-color: #c00;
+			border: 0;
+			color: #fff;
+		}
+	</style>
+</head>
+<body>
+	<div id="content-wrapper">
+		<button id="canvasRun">Draw Canvas</button><br><br>
+		<canvas id="myCanvas" width="600" height="450"></canvas>
+	</div>
+	<script type="text/javascript">
+		// Canvas Drawing Code Here
+
+		document.addEventListener('DOMContentLoaded',function(){
+			document.getElementById('myCanvas').style.visibility = 'hidden';
+		});
+		document.addEventListener('click', function(){
+			document.getElementById('canvasRun').disabled = 'true';
+			document.getElementById('myCanvas').style.visibility = 'visible';
+			let canvas = document.getElementById('myCanvas');
+			let startAngle = 60;
+			let endAngle = 270;
+			let currentAngle = 0;
+			if (canvas.getContext) {
+			//	let ctx = canvas.getContext('2d');
+			window.requestAnimationFrame(drawFrame);
+			}//endif
+//////////////////////////////////////////////////////////////////////////////
+function drawFrame(){
+
+	let ctx = document.getElementById('myCanvas').getContext('2d');
+	ctx.clearRect(0,0,600,450); // clear canvas
+	//Background gradient
+	let grd = ctx.createLinearGradient(0, 0, 0, 450);
+	grd.addColorStop(0, "white");
+	grd.addColorStop(1, "black");
+	ctx.fillStyle = grd;
+	ctx.fillRect(0, 0, 600, 450);
+
+
+
+	//Arc
+	ctx.beginPath();
+	ctx.arc(290, 140, 55,((Math.PI/180)*startAngle+currentAngle*10), (((Math.PI/180)*270)+currentAngle*10),true);
+	ctx.setLineDash([]);
+	ctx.lineWidth = 15;
+	ctx.strokeStyle = '#FFA500';
+	ctx.stroke();
+	//Square
+	ctx.translate(500,140);
+	ctx.rotate(currentAngle*(1/2));
+	ctx.beginPath();
+	ctx.lineWidth = 1;
+	ctx.fillStyle = "rgb(255,255,255)";
+	ctx.fillRect(-55, -55, 110, 110);
+	ctx.fillStyle = '#C80000';
+	ctx.fillRect(-50, -50, 100, 100);
+	ctx.setTransform(1, 0, 0, 1, 0, 0);
+	console.log(currentAngle);;
+
+	currentAngle += (Math.PI/180);
+	currentAngle = currentAngle % ( 2 * Math.PI) ;
+//	ctx.restore();
+
+	//Circle
+	ctx.fillStyle = 'rgb(255,255,255)';
+	ctx.beginPath();
+	ctx.arc(100, 140, 60, 0, 2 * Math.PI);
+	ctx.fill();
+	ctx.closePath();
+	ctx.beginPath();
+	ctx.fillStyle = '#0000C8';
+	ctx.arc(100, 140, 57, 0, 2 * Math.PI);
+	ctx.fill();
+	ctx.closePath();
+	//Triangle
+	ctx.fillStyle = '#00C800';
+	ctx.beginPath();
+	ctx.moveTo(100,225);
+	ctx.lineTo(150,325);
+	ctx.lineTo(50, 325);
+	ctx.fill();
+	ctx.closePath();
+
+	//White rectangle
+	ctx.fillStyle = 'rgb(255,255,255)';
+	ctx.beginPath();
+	ctx.moveTo(250,225);
+	ctx.lineTo(560,225);
+	ctx.lineTo(560, 325);
+	ctx.lineTo(250,325);
+	ctx.fill();
+	ctx.closePath();
+	//TODO CURVE
+	let start = { x: 270,    y: 275  };
+	let cp1 =   { x: 390 ,   y: 190  };
+	let cp2 =   { x: 420,   y: 360  };
+	let end =   { x: 540,   y: 275 };
+	// Cubic Bézier curve
+	ctx.beginPath();
+	ctx.lineWidth=2;
+	ctx.strokeStyle = '#000000';
+	ctx.setLineDash([10,4]);
+	ctx.moveTo(start.x, start.y);
+	ctx.bezierCurveTo(cp1.x, cp1.y, cp2.x, cp2.y, end.x, end.y);
+	ctx.stroke();
+
+
+	//Add Text
+	ctx.fillStyle = '#C80000';
+	ctx.font = '32px sans-serif';
+	ctx.fillText('ITMD 565 Canvas Lab', 150, 50);
+	//Add Line
+	ctx.beginPath();
+	ctx.moveTo(10,60);
+	ctx.lineTo(590,60);
+	ctx.setLineDash([]);
+	ctx.lineWidth= 3;
+	ctx.strokeStyle = '#C80000';
+	ctx.stroke();
+	//Add Text
+	ctx.fillStyle = "rgb(255,255,255)";
+	ctx.font = '14px sans-serif';
+	ctx.fillText('Jose Ignacio Sota Fernandez-Martos', 15, 400);
+	ctx.fillText('jsotafernandezmartos@hawk.iit.edu', 15, 420);
+	//Image
+	let img = new Image();
+	img.src = '../IIT_SAT_stack_186_white.png'; // Set source path
+	ctx.drawImage(img, 350, 350,225,75);
+	window.requestAnimationFrame(drawFrame);
+}
+});
+
+	</script>
+</body>
+</html>
